@@ -1,13 +1,15 @@
 #include "Arduino.h"
-#include "PCF8574.h"
+#include "PCF8575.h"
 
-#define BUTTONS_COUNT 8
+#define BUTTONS_COUNT 9
+#define LEDS_COUNT 1
 
-PCF8574 pcf8574(0x20);
+PCF8575 pcf8575(0x20);
 
 #include "buttontype.enum.h"
 #include "button.h"
 #include "relay.h"
+#include "led.h"
 
 Button buttons[] = {
   Button(P0, MOMENTARY),
@@ -17,18 +19,23 @@ Button buttons[] = {
   Button(P4, MOMENTARY),
   Button(P5, MOMENTARY),
   Button(P6, MOMENTARY),
-  Button(P7, MOMENTARY)
+  Button(P7, MOMENTARY),
+  Button(P8, MOMENTARY)
 };
 
 Relay relays[] = {
-  Relay(2),
-  Relay(3),
-  Relay(4),
-  Relay(5),
-  Relay(6),
-  Relay(7),
-  Relay(8),
-  Relay(9)
+  Relay(2, HIGH),
+  Relay(3, HIGH),
+  Relay(4, HIGH),
+  Relay(5, HIGH),
+  Relay(6, HIGH),
+  Relay(7, HIGH),
+  Relay(8, HIGH),
+  Relay(9, HIGH)
+};
+
+Led leds[] = {
+  Led(P9)
 };
 
 void setup() {
@@ -36,6 +43,7 @@ void setup() {
 
   setupPcf();
   setupButtons();
+  setupLeds();
   readButtonsState();
 }
 
@@ -46,12 +54,8 @@ void loop() {
 }
 
 void setupPcf() {
-  Serial.print("Init pcf8574...");
-  if (pcf8574.begin()) {
-    Serial.println("OK");
-  } else {
-    Serial.println("KO");
-  }
+  Serial.println("Init pcf8575...");
+  pcf8575.begin();
 }
 
 void setupButtons() {
@@ -60,19 +64,34 @@ void setupButtons() {
   }
 }
 
-void readButtonsState() {
+void setupLeds() {
+  for (int i = 0; i < LEDS_COUNT; i++) {
+    leds[i].setupPin();
+  }
+}
+
+void readButtonsState() {  
   for (int i = 0; i < BUTTONS_COUNT; i++) {
     buttons[i].readButtonState(onButtonKeydown, onButtonKeyup, i);
   }
 }
 
 void onButtonKeydown(int index) {
+  
   Relay *relay = &relays[index];
 
   if (buttons[index].isMomenatryType() || !relay->isRelayOn()) {
     relays[index].turnOn();
+
+    if (index == 1) {
+      leds[0].turnOn();
+    }
   } else {
     relays[index].turnOff();
+
+    if (index == 1) {
+      leds[0].turnOff();
+    }
   }
 }
 

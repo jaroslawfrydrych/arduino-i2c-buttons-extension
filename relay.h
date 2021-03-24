@@ -2,26 +2,45 @@ class Relay {
   private:
     int pin;
     bool isOn;
+    uint8_t initialState;
 
     void setupPins() {
       pinMode(this->pin, OUTPUT);
-      digitalWrite(this->pin, HIGH);
+
+      this->turnOffRelay();
+    }
+
+    void turnOffRelay() {
+      if (this->initialState == HIGH) {
+        digitalWrite(this->pin, HIGH);
+      } else {
+        digitalWrite(this->pin, LOW);
+      }
+    }
+
+    void turnOnRelay() {      
+      if (this->initialState == HIGH) {
+        digitalWrite(this->pin, LOW);
+      } else {
+        digitalWrite(this->pin, HIGH);
+      }
     }
     
   public:
-    Relay(int pin) {
+    Relay(int pin, uint8_t initialState) {
       this->pin = pin;
+      this->initialState = initialState;
       this->setupPins();
     }
 
     void turnOn() {
       this->isOn = true;
-      digitalWrite(this->pin, LOW);
+      this->turnOnRelay();
     }
 
     void turnOff() {
       this->isOn = false;
-      digitalWrite(this->pin, HIGH);
+      this->turnOffRelay();
     }
 
     bool isRelayOn() {

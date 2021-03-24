@@ -8,7 +8,7 @@ class Button {
     unsigned long debounceDelay = 50;
 
     uint8_t readingValue() {
-      return pcf8574.digitalRead(this->pin);
+      return pcf8575.digitalRead(this->pin);
     }
 
     bool isPinHigh(uint8_t value) {
@@ -34,7 +34,7 @@ class Button {
     }
 
     void setupPin() {
-      pcf8574.pinMode(this->pin, INPUT);
+      pcf8575.pinMode(this->pin, INPUT);
     }
 
     void keydown(void (*callback)(int callbackParam), int callbackParam) {
