@@ -1,9 +1,12 @@
+#include "PCF8574.h"
+
 class Relay {
   private:
     int pin;
     bool isOn;
     uint8_t initialState;
-
+    int pcfRelayIndex;
+    
     void setupPins() {
       pinMode(this->pin, OUTPUT);
 
@@ -12,24 +15,25 @@ class Relay {
 
     void turnOffRelay() {
       if (this->initialState == HIGH) {
-        digitalWrite(this->pin, HIGH);
+        pcfRelays[this->pcfRelayIndex].digitalWrite(this->pin, HIGH);
       } else {
-        digitalWrite(this->pin, LOW);
+        pcfRelays[this->pcfRelayIndex].digitalWrite(this->pin, LOW);
       }
     }
 
     void turnOnRelay() {      
       if (this->initialState == HIGH) {
-        digitalWrite(this->pin, LOW);
+        pcfRelays[this->pcfRelayIndex].digitalWrite(this->pin, LOW);
       } else {
-        digitalWrite(this->pin, HIGH);
+        pcfRelays[this->pcfRelayIndex].digitalWrite(this->pin, HIGH);
       }
     }
     
   public:
-    Relay(int pin, uint8_t initialState) {
+    Relay(int pin, uint8_t initialState, int pcfRelayIndex) {
       this->pin = pin;
       this->initialState = initialState;
+      this->pcfRelayIndex = pcfRelayIndex;
       this->setupPins();
     }
 

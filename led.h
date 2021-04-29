@@ -8,15 +8,15 @@ class Led {
     }
 
     void setupPin() {
-      pcf8575.pinMode(this->pin, OUTPUT);
+      pcfSteering.pinMode(this->pin, OUTPUT);
       this->turnOff();
     }
 
     void turnOn() {
-      pcf8575.digitalWrite(this->pin, LOW); 
+      pcfSteering.digitalWrite(this->pin, LOW); 
     }
 
     void turnOff() {
-      pcf8575.digitalWrite(this->pin, HIGH);
+      pcfSteering.digitalWrite(this->pin, HIGH);
     }
 };
