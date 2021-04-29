@@ -1,5 +1,8 @@
 #include "PCF8574.h"
 
+/*
+ * @deprecated
+ */
 class Relay {
   private:
     int pin;
